@@ -58,9 +58,33 @@ View the security assessment
 #### GrayHatWarfare
 Search for leaked data.
 
+### Staff
+Check employees linkedin. If we find a github, look through it. 
+
 
 ## Host Based Enumeration
 ### FTP
+#### Check for anonymous login
+```
+ftp 10.129.14.136
+```
+#### Basic Enumeration (FTP Session)
+```
+ls
+ls -R
+status
+debug
+trace
+get
+put
+wget -m --no-passive ftp://anonymous:anonymous@10.129.14.136
+```
+
+#### Nmap Enumeration
+```
+nmap -sV -p21 -sC -A 10.129.14.136
+```
+
 ### SMB
 ### NFS
 ### DNS
