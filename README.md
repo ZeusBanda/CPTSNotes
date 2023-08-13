@@ -42,6 +42,22 @@ dig any inlanefreight.com
 ```
 
 ### Cloud Enumeration
+#### Google Search for AWS
+```
+intext: inurl:amazonaws.com
+```
+#### Google Search for Azure
+```
+intext: inurl:blog.core.windows.net
+```
+#### Website Source Code
+View the source code for amazonaws and windows.net
+
+#### Domain.Glass
+View the security assessment
+#### GrayHatWarfare
+Search for leaked data.
+
 
 ## Host Based Enumeration
 ### FTP
