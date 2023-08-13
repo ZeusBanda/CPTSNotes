@@ -86,6 +86,54 @@ nmap -sV -p21 -sC -A 10.129.14.136
 ```
 
 ### SMB
+#### Enumerate available shares and connect to a share
+```
+smbclient -N -L //10.129.14.128
+smbclient //10.129.14.128/notes
+```
+#### Interacting with SMB
+```
+get pred-prod.txt
+put doc.txt
+smbstatus
+```
+#### Enumerate with Nmap
+```
+nmap 10.129.14.128 -sV -sC -p139,445
+```
+#### Enumerate with RPCclient
+```
+rpcclient -U "" 10.129.14.128
+srvinfo
+enumdomains
+querydominfo
+netshareenumall
+netsharegetinfo notes
+enumdomusers
+queryuser 0x3e9
+querygroup0x201
+```
+#### Bruteforce RIDs
+```
+for i in $(seq 500 1100);do rpcclient -N -U "" 10.129.14.128 -c "queryuser 0x$(printf '%x\n' $i)" | grep "User Name\|user_rid\|group_rid" && echo "";done
+```
+#### Samrdump.py
+```
+samrdump.py 10.129.14.128
+```
+#### smbmap
+```
+smbmap -H 10.129.14.128
+```
+#### CrackMapExec
+```
+crackmapexec smb 10.129.14.128 --shares -u '' -p ''
+```
+#### Enum4Linux
+```
+enum4linux -a 10.10.10.225
+```
+
 ### NFS
 ### DNS
 ### SMTP
