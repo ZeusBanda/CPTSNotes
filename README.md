@@ -135,6 +135,35 @@ enum4linux -a 10.10.10.225
 ```
 
 ### NFS
+#### Enumerate with Nmap
+```
+nmap 10.129.14.128 -p111,2049 -sV -sC
+nmap --script nfs* 10.129.14.128 -sV -p111,2049
+```
+#### Show Available NFS Shares
+```
+showmount -e 10.129.14.128
+```
+#### Mount an NFS Share
+```
+mkdir target-NFS
+sudo mount -t nfs 10.129.14.128:/ ./target-NFS/ -o nolock
+cd target-NFS
+tree .
+```
+#### Listing Contents with Usernames and Group Names
+```
+ls -l mnt/nfs/
+```
+#### Listing Contents with UIDs and GUIDs
+```
+ls -n mnt/nfs/
+```
+#### Unmounting
+```
+sudo umount ./target-NFS
+```
+
 ### DNS
 ### SMTP
 ### IMAP/POP3
