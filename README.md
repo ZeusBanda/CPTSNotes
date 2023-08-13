@@ -200,9 +200,36 @@ for sub in $(cat /opt/useful/SecLists/Discovery/DNS/subdomains-top1million-11000
 dnsenum --dnsserver 10.129.14.128 --enum -p 0 -s 0 -o subdomains.txt -f /opt/useful/SecLists/Discovery/DNS/subdomains-top1million-110000.txt inlanefreight.htb
 ```
 
-
-
 ### SMTP
+#### Intereact with SMTP with Telnet
+```
+telnet 10.129.14.128 25
+HELO mail1.inlanefreight.htb
+EHLO mail1
+VRFY root
+VRFY cry0l1t3
+```
+#### Send an Email
+```
+telnet 10.129.14.128 25
+EHLO inlanefreight.htb
+MAIL FROM: <cry0l1t3@inlanefreight.htb>
+RCPT TO: <mrb3n@inlanefreight.htb> NOTIFY=success,failure
+DATA
+From: <cry0l1t3@inlanefreight.htb>
+To: <mrb3n@inlanefreight.htb>
+Subject: DB
+Date: Tue, 28 Sept 2021 16:32:51 +0200
+Hey man, I am trying to access our XY-DB but the creds don't work. 
+Did you make any changes there?
+.
+```
+#### Footprint the Service with Nmap
+```
+nmap 10.129.14.128 -sC -sV -p25
+nmap 10.129.14.128 -p25 --script smtp-open-relay -v
+```
+
 ### IMAP/POP3
 ### SNMP
 ### MySQL
