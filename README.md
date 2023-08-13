@@ -51,8 +51,6 @@ nmap -sS -p- -A 10.129.2.1 -oA ss_dns_host_scan --source-port 53
 
 # Shells & Payloads
 
-# Using the Metasploit Framework
-
 # Password Attacks
 
 # Attacking Common Services
