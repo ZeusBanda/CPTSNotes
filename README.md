@@ -23,6 +23,25 @@ nmap -sS -p- -A 10.129.2.1 -oA ss_dns_host_scan --source-port 53
 ```
 
 # Footprinting
+## Infrastructure Enumeration
+
+## Host Based Enumeration
+### FTP
+### SMB
+### NFS
+### DNS
+### SMTP
+### IMAP/POP3
+### SNMP
+### MySQL
+### MSSQL
+### Oracle TNS
+### IPMI
+
+
+## Remote Management Protocols
+### Linux Remote Management Protocols
+### Windows Remote Management Protocols
 
 # Information Gathering - Web Edition
 
