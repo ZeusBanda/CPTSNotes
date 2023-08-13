@@ -24,6 +24,24 @@ nmap -sS -p- -A 10.129.2.1 -oA ss_dns_host_scan --source-port 53
 
 # Footprinting
 ## Infrastructure Enumeration
+### Domain Enumeration
+#### Certificate Transparency
+Check crt.sh
+#### Company Hosted Servers 
+```
+for i in $(cat subdomainlist);do host $i | grep "has address" | grep inlanefreight.com | cut -d" " -f1,4;done
+```
+#### Shodan Scan
+```
+for i in $(cat subdomainlist);do host $i | grep "has address" | grep inlanefreight.com | cut -d" " -f4 >> ip-addresses.txt;done
+for i in $(cat ip-addresses.txt);do shodan host $i;done
+```
+#### DNS Records
+```
+dig any inlanefreight.com
+```
+
+### Cloud Enumeration
 
 ## Host Based Enumeration
 ### FTP
