@@ -231,9 +231,53 @@ nmap 10.129.14.128 -p25 --script smtp-open-relay -v
 ```
 
 ### IMAP/POP3
+#### Footprinting IMAP/POP3 with Nmap
+```
+nmap 10.129.14.128 -sV -p110,143,993,995 -sC
+```
+#### Interacting with IMAP/POP3
+```
+curl -k 'imaps://10.129.14.128' --user user:p4ssw0rd
+curl -k 'imaps://10.129.14.128' --user cry0l1t3:1234 -v
+openssl s_client -connect 10.129.14.128:pop3s
+openssl s_client -connect 10.129.14.128:imaps
+```
+
 ### SNMP
+#### Brute Force Community Strings
+```
+onesixtyone -c /opt/useful/SecLists/Discovery/SNMP/snmp.txt 10.129.14.128
+```
+#### SNMPwalk
+```
+snmpwalk -v2c -c public 10.129.14.128
+```
+#### Braa
+```
+braa <community string>@<IP>:.1.3.6.*
+```
+
 ### MySQL
+#### Foorprinting with Nmap
+```
+nmap 10.129.14.128 -sV -sC -p3306 --script mysql*
+```
+#### Interact with MySQL Server
+```
+mysql -u root -h 10.129.14.132
+mysql -u root -pP4SSw0rd -h 10.129.14.128
+```
+
 ### MSSQL
+#### Enumerate MSSQL with nmap
+```
+nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 10.129.201.248
+```
+#### Interacting with MSSQL
+```
+python3 mssqlclient.py Administrator@10.129.201.248 -windows-auth
+```
+
 ### Oracle TNS
 ### IPMI
 
