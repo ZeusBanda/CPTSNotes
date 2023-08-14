@@ -279,12 +279,124 @@ python3 mssqlclient.py Administrator@10.129.201.248 -windows-auth
 ```
 
 ### Oracle TNS
-### IPMI
+#### Enumerate TNS with Nmap
+```
+nmap -p1521 -sV 10.129.204.235 --open
+nmap -p1521 -sV 10.129.204.235 --open --script oracle-sid-brute
+```
+#### ODAT
+```
+odat all -s 10.129.204.235
+```
+#### Interact with TNS
+```
+sqlplus scott/tiger@10.129.204.235/XE;
+```
+#### SQLPlus Commands
+```
+https://docs.oracle.com/cd/E11882_01/server.112/e41085/sqlqraa001.htm#SQLQR985
+```
 
+### IPMI
+#### Footprinting the Service with nmap
+```
+nmap -sU --script ipmi-version -p 623 ilo.inlanfreight.local
+```
+#### Metasploit Version Scan
+```
+use auxiliary/scanner/ipmi/ipmi_version
+set rhosts 10.129.42.195
+show options
+run
+```
+#### Metasploit Dumping Hashes
+```
+use auxiliary/scanner/ipmi/ipmi_dumphashes
+set rhosts 10.129.42.195
+show options
+run
+```
 
 ## Remote Management Protocols
 ### Linux Remote Management Protocols
+#### SSH
+##### SSH Audit
+```
+ssh-audit 10.129.14.132
+```
+##### Change Authentication Method
+```
+ssh -v cry0l1t3@10.129.14.132
+ssh -v cry0l1t3@10.129.14.132 -o PreferredAuthentications=password
+```
+
+#### Rsync
+##### Footprint the service with Nmap
+```
+nmap -sV -p 873 127.0.0.1
+```
+##### Probing for Accessible Shares
+```
+nc -nv 127.0.0.1 873
+```
+##### Enumerate Open Shares
+```
+rsync -av --list-only rsync://127.0.0.1/dev
+```
+
+#### R-Services
+##### Footprint the service with Nmap
+```
+nmap -sV -p 512,513,514 10.0.17.2
+```
+##### Logging in with Rlogin
+```
+rlogin 10.0.17.2 -l htb-student
+```
+##### List Authenticated Users Using Rwho
+```
+rwho
+```
+##### List Authenticatesd Users Using Rusers
+```
+rusers -al 10.0.17.5
+```
+
 ### Windows Remote Management Protocols
+#### RDP
+##### Footprinting the Service with Nmap
+```
+nmap -sV -sC 10.129.201.248 -p3389 --script rdp*
+nmap -sV -sC 10.129.201.248 -p3389 --packet-trace --disable-arp-ping -n
+```
+##### RDP Security Check
+```
+./rdp-sec-check.pl 10.129.201.248
+```
+##### Initiate an RDP Session
+```
+xfreerdp /u:cry0l1t3 /p:"P455w0rd!" /v:10.129.201.248 /dynamic-resolution
+```
+
+#### WinRM
+##### Footprinting the Service with Nmap
+```
+nmap -sV -sC 10.129.201.248 -p5985,5986 --disable-arp-ping -n
+```
+##### Evil Winrm
+```
+evil-winrm -i 10.129.201.248 -u Cry0l1t3 -p P455w0rD!
+```
+
+#### WMI
+##### Footprinting the Service with Nmap
+```
+nmap -sV -sC 10.129.201.248 -p135 --disable-arp-ping -n
+```
+##### WMIexec
+```
+wmiexec.py Cry0l1t3:"P455w0rD!"@10.129.201.248 "hostname"
+```
 
 # Information Gathering - Web Edition
 
