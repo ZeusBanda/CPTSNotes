@@ -508,9 +508,52 @@ waybackurls -dates https://facebook.com > waybackurls.txt
 
 ## Active Information Gathering
 ### Active Infrastructure Indentification
+#### HTTP Headers
+```
+curl -I "http://${TARGET}"
+```
+#### WhatWeb
+```
+whatweb -a3 https://www.facebook.com -v
+```
+#### Use Wappalyzer
+Use Browser
+#### Use WafW00f
+```
+wafw00f -v https://www.tesla.com
+```
+#### Aquatone
+```
+cat facebook_aquatone.txt | aquatone -out ./aquatone -screenshot-timeout 1000
+```
+
 ### Active Subdomain Enumeration
+#### Zone Transfer
+1. Identifying Nameservers
+```
+nslookup -type=NS zonetransfer.me
+```
+2. Testing for ANY and AXFR Zone Transfer
+```
+nslookup -type=any -query=AXFR zonetransfer.me nsztm1.digi.ninja
+```
+#### Gobuster
+```
+gobuster dns -d mydomain.com -w /usr/share/wordlists/dirb/common.txt
+```
+
 ### Virtual Hosts
+#### vHost Fuzzing with FFuF
+```
+ffuf -w ./vhosts -u http://192.168.10.10 -H "HOST: FUZZ.randomtarget.com" -fs 612
+```
+
 ### Crawling
+#### Use ZAP
+#### Use FFuF
+```
+ffuf -recursion -recursion-depth 1 -u http://192.168.10.10/FUZZ -w /opt/useful/SecLists/Discovery/Web-Content/raft-small-directories-lowercase.txt
+```
 
 # Vulnerability Assessment
 
