@@ -465,7 +465,47 @@ whois 157.240.199.35
 ```
 
 ### Passive Subdomain Enumeration
+#### VirusTotal
+Check Virustotal Relations
+#### Certificates
+```
+https://cencys.io
+https://crt.sh
+```
+#### TheHarvester
+##### Sources.txt
+```
+baidu
+bufferoverun
+crtsh
+hackertarget
+otx
+projecdiscovery
+rapiddns
+sublist3r
+threatcrowd
+trello
+urlscan
+vhost
+virustotal
+zoomeye
+```
+##### The Command
+```
+cat sources.txt | while read source; do theHarvester -d "${TARGET}" -b $source -f "${source}_${TARGET}";done
+cat *.json | jq -r '.hosts[]' 2>/dev/null | cut -d':' -f 1 | sort -u > "${TARGET}_theHarvester.txt"
+```
+
 ### Passive Infrastructure Enumeration
+#### Netcraft
+```
+https://sitereport.netcraft.com
+```
+#### Wayback Machine and Wayback URLs
+```
+waybackurls -dates https://facebook.com > waybackurls.txt
+```
+
 ## Active Information Gathering
 ### Active Infrastructure Indentification
 ### Active Subdomain Enumeration
