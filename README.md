@@ -1415,6 +1415,148 @@ GO
 # Attacking Common Applications
 
 # Linux Privilege Escalation
+## Introduction
+### List Current Processes
+```
+ps aux | grep root
+ps au
+```
+### Display Home Directory
+```
+ls /home
+```
+### Display Home Directory Content
+```
+la -lah /home/user
+```
+### SSH Directory Contents
+```
+ls -l /home/user/.ssh
+```
+### Bash History
+```
+history
+```
+### Sudo Privileges
+```
+sudo -l
+```
+### View Passwd File
+```
+cat /etc/passwd
+```
+### View Cron Jobs
+```
+ls -la /etc/cron.daily/
+```
+### File Systems and Additional Drives
+```
+lsblk
+```
+### Find Writeable Directories
+```
+find / -path /proc -prune -o -type d -perm -o+w 2>/dev/null
+```
+### Find Writeable Files
+```
+find / -path /proc -prune -o -type f -perm -o+w 2>/dev/null
+```
+
+## Environment Enumeration
+### Operating system and version
+```
+cat /etc/os-release
+```
+### Enumerate Path
+```
+echo $PATH
+```
+### Enumerate Environment
+```
+env
+```
+### Enumerate Kernel
+```
+cat /proc/version
+```
+```
+uname -a
+```
+### Enumerate CPU
+```
+lscpu
+```
+### Enumerate Shells
+```
+cat /etc/shells
+```
+### Enumerate Drives and Shares
+```
+lsblk
+cat /etc/fstab
+```
+### Enumerate Printers
+```
+lpstat
+```
+### Enumerate the Routing Table
+```
+route
+```
+### Enumerate the ARP Table
+```
+arp -a
+```
+### Enumerate Existing Users
+```
+cat /etc/passwd
+cat /etc/passwd | cut -f1 -d:
+```
+### Enumerate User Shell Access
+```
+grep "*sh$" /etc/passwd
+```
+### Enumerate Groups
+```
+cat /etc/group
+```
+### Enumerate a Specific Group
+```
+getent group sudo
+```
+### Enumerate Mounted File Systems
+```
+df -h
+```
+### Enumerate Unmounted File Systems
+```
+cat /etc/fstab | grep -v "#" | column -t
+```
+### Find all Hidden Files owned by user
+```
+find / -type f -name ".*" -exec ls -l {} \; 2>/dev/null | grep htb-student
+```
+### Find All Hidden Directories
+```
+find / -type d -name ".*" -ls 2>/dev/null
+```
+### Enumerate Temporary Files
+```
+ls -l /tmp /var/tmp /dev/shm
+```
+
+## Linux Services and Internals Enumeration
+### Network Interfaces
+```
+ip a
+```
+
+## Environment-Based Privilege Escalation
+## Permissions-Based Privilege Escalation
+## Service-Based Privilege Escalation
+## Linux Internals-Based Privilege Escalation
+## Recent 0-Days
+## Hardening Considerations
 
 # Windows Privilege Escalation
 
