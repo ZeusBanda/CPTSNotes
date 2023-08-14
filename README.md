@@ -1104,7 +1104,6 @@ john --wordlist=rockyou.txt pdf.hash
 john pdf.hash --show
 ```
 
-
 ### Protected Archives
 #### Cracking ZIp with John
 ```
