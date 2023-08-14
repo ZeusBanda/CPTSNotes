@@ -399,6 +399,16 @@ wmiexec.py Cry0l1t3:"P455w0rD!"@10.129.201.248 "hostname"
 ```
 
 # Information Gathering - Web Edition
+## Passive Information Gathering
+### Whois
+### DNS
+### Passive Subdomain Enumeration
+### Passive Infrastructure Enumeration
+## Active Information Gathering
+### Active Infrastructure Indentification
+### Active Subdomain Enumeration
+### Virtual Hosts
+### Crawling
 
 # Vulnerability Assessment
 
