@@ -401,7 +401,69 @@ wmiexec.py Cry0l1t3:"P455w0rD!"@10.129.201.248 "hostname"
 # Information Gathering - Web Edition
 ## Passive Information Gathering
 ### Whois
+```
+whois facebook.com
+```
+
 ### DNS
+#### nslookup
+##### Querying A Records
+```
+nslookup facebook.com
+```
+##### Querying A Records for a subdomain
+```
+nslookup -query=A www.facebook.com
+```
+##### Querying PTR Records for an IP Address
+```
+nslookup -query=PTR 31.13.92.36
+```
+##### Querying ANY Existing Records
+```
+nslookup -query=ANY facebook.com
+```
+##### Querying TXT Records
+```
+nslookup -query=TXT facebook.com
+```
+##### Querying MX Records
+```
+nslookup -query=MX facebook.com
+```
+
+#### DIG
+##### Querying A Records
+```
+dig facebook.com @1.1.1.1
+```
+##### Querying A Records for a subdomain
+```
+dig a www.facebook.com @1.1.1.1
+```
+##### Querying PTR Records for an IP Address
+```
+dig -x 31.13.92.36 @1.1.1.1
+```
+##### Querying ANY Existing Records
+```
+dig any facebook.com @1.1.1.1
+```
+##### Querying TXT Records
+```
+dig txt facebook.com @1.1.1.1
+```
+##### Querying MX Records
+```
+dig mx facebook.com @1.1.1.1
+```
+
+#### Determine Host
+```
+nslookup facebook.com
+whois 157.240.199.35
+```
+
 ### Passive Subdomain Enumeration
 ### Passive Infrastructure Enumeration
 ## Active Information Gathering
