@@ -1674,6 +1674,19 @@ sudo apt-get update -o APT::Update::Pre-Invoke::=/bin/sh
 https://gtfobins.github.io/
 ```
 
+### Sudo Rights Abuse
+Check sudo Permissions, Check GTFOBins, Follow GTFOBins Guidance.
+```
+sudo -l
+```
+### Privileged Groups
+#### Check Group Membership and Enumerate Their Permissions
+```
+id
+```
+
+### Capabilities
+####
 
 ## Service-Based Privilege Escalation
 ## Linux Internals-Based Privilege Escalation
