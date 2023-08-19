@@ -1919,8 +1919,22 @@ sudo -u#-1 id
 ```
 
 ### Polkit
+#### Check for pkexec
+```
+pkexec -u <user> <command>
+```
+#### Download a PoC and execute it
+
 ### Dirty Pipe
-### Netfilter
+#### Verify Kernel Version
+```
+uname -r
+```
+#### Check SUID Binaries
+```
+find / -perm -4000 2>/dev/null
+```
+
 
 ## Hardening Considerations
 
