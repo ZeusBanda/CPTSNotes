@@ -2024,9 +2024,26 @@ net localgroup administrators
 ```
 #### Password Policy and Other Information
 ```
-net accounta
+net accounts
 ```
-
+### Named Pipes
+#### Pipelist
+##### cmd
+```
+pipelist.exe /accepteula
+```
+##### Powershell
+```
+gci \\.\pipe\
+```
+#### Review LSASS Named Pipe
+```
+accesschk.exe /accepteula \\.\Pipe\lsass -v
+```
+#### LSASS Named Pipe Attack
+```
+accesschk.exe -accepteula -w \pipe\WindscribeService -v
+```
 
 # Documentation & Reporting
 
