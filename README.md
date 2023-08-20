@@ -1936,9 +1936,85 @@ find / -perm -4000 2>/dev/null
 ```
 
 
-## Hardening Considerations
-
 # Windows Privilege Escalation
+## Enumeration
+### Network Enumeration
+```
+ipconfig /all
+arp -a
+route print
+
+```
+### Enumerate Defenses
+#### Defender Status
+```
+powershell -ep bypass
+Get-MpComputerStatus
+```
+#### AppLocker Rules
+```
+Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+```
+#### Test AppLocker Policy
+```
+Get-AppLockerPolicy -Local | Test-AppLockerPolicy -path C:\Windows\System32\cmd.exe -User Everyone
+```
+### System Information
+#### Tasklist
+```
+tasklist /svc
+```
+#### Environment variable
+```
+set
+```
+#### Detailed Configuration Information
+```
+systeminfo
+```
+#### Patches and Updates
+##### cmd
+```
+wmic qfe
+```
+##### Powershell
+```
+Get-HotFix | ft -AutoSize
+```
+#### Installed Programs
+##### cmd
+```
+wmic product get name
+```
+##### powershell
+```
+Get-WmiObject -Class Win32_Product |  select Name, Version
+```
+#### Display Running Process
+```
+netstat -ano
+```
+#### logged-in users
+```
+query user
+```
+#### Current User
+```
+echo %USERNAME%
+```
+#### Current User Privileges
+```
+whoami /priv
+```
+#### Current User Groups
+```
+whoami /groups
+```
+#### Get All Users
+```
+net user
+```
+
 
 # Documentation & Reporting
 
