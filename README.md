@@ -2014,6 +2014,18 @@ whoami /groups
 ```
 net user
 ```
+#### Get All Groups
+```
+net localgroup
+```
+#### Group Details
+```
+net localgroup administrators
+```
+#### Password Policy and Other Information
+```
+net accounta
+```
 
 
 # Documentation & Reporting
